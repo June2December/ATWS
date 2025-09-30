@@ -1,0 +1,23 @@
+tools = [
+    {
+        "type": "function",
+        "function": {
+            "name": "image_finder",
+            "description": "Reasoning what this picture is.",
+            "parameters": {
+                "type": "object",
+                "properties": {
+                    "label": {
+                        "type": "string",
+                        "description": "A short label for the object in the image."
+                    },
+                    "confidence": {
+                        "type": "number",
+                        "description": "Confidence score between 0 and 1."
+                    }
+                },
+                "required": ["label"]
+            }
+        }
+    }
+]
