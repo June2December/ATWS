@@ -1,6 +1,6 @@
 from PyQt5.QtWidgets import (
     QMainWindow, QPushButton, QTextEdit, QVBoxLayout,
-    QWidget, QLabel, QFileDialog, QHBoxLayout
+    QWidget, QLabel, QFileDialog, QHBoxLayout, QSizePolicy
 )
 from PyQt5.QtGui import QPixmap
 from PyQt5.QtCore import Qt
@@ -22,13 +22,11 @@ class MainApp(QMainWindow):
         self.load_button = QPushButton("이미지 열기")
         self.load_button.clicked.connect(self.load_image)
 
-        # 텍스트 입력
-        self.text_input = QTextEdit()
-        self.text_input.setPlaceholderText("GPT에게 보낼 추가 프롬프트 입력")
-
         # GPT 설명 출력
         self.result_output = QTextEdit()
         self.result_output.setReadOnly(True)
+        self.result_output.setMinimumHeight(250)
+        self.result_output.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Expanding)
 
         # 설명 생성 버튼
         
@@ -38,22 +36,11 @@ class MainApp(QMainWindow):
 
 
         # 레이아웃 설정 예시
-        # 상단 수평 레이아웃: 이미지 라벨 + 이미지 불러오기 버튼
-        top_layout = QHBoxLayout()
-        top_layout.addWidget(self.image_label)        # 왼쪽: 이미지를 보여주는 QLabel
-        top_layout.addWidget(self.load_button)        # 오른쪽: 이미지 불러오기 버튼
-        
-        # 전체 수직 레이아웃 구성
         layout = QVBoxLayout()
-        
-        # 첫 번째 줄: 이미지 라벨과 버튼이 나란히 들어간 수평 레이아웃
-        layout.addLayout(top_layout)
-        # 두 번째 줄: 사용자 입력창 (GPT에게 보낼 프롬프트)
-        layout.addWidget(self.text_input)
-        # 세 번째 줄: GPT 설명 생성 버튼
+        layout.addWidget(self.image_label, alignment=Qt.AlignCenter)
+        layout.addWidget(self.load_button, alignment=Qt.AlignCenter)
         layout.addWidget(self.generate_button)
-        # 네 번째 줄: GPT의 결과 텍스트 출력창
-        layout.addWidget(self.result_output)
+        layout.addWidget(self.result_output, 1)
         
         # 레이아웃을 QWidget에 붙이고, 해당 위젯을 윈도우의 중앙 위젯으로 설정
         container = QWidget()
@@ -75,9 +62,8 @@ class MainApp(QMainWindow):
         if not self.image_path:
             self.result_output.setPlainText("이미지를 먼저 선택하세요.")
             return
-        prompt = self.text_input.toPlainText().strip()
         try:
-            result = get_image_description(self.image_path, prompt)
+            result = get_image_description(self.image_path, "")
             self.result_output.setPlainText(result or "(빈 응답)")
         except Exception as e:
             self.result_output.setPlainText(f"오류: {e}")
