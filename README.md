@@ -20,8 +20,14 @@
 2. **분류**
     - 대상 클래스: [미상물체, 무인기, 쓰레기 풍선, 새]
     - 동시에 ***OpenAI API를 활용하여 이미지 분류를 우선적***으로 진행.
-        - 자체 모델(EfficientNet, ResNet, YOLOv8 등)을 구현할 계획.
-3. **분류에 의한 관측보고 작성**
+        - 자체 모델(EfficientNet, ResNet, YOLOv8 등)과 OpenAI API 의 분류 성능 비교.
+            - 자체 모델은 <이미지 분류>, <방향 추정 알고리즘> 순차 진행.
+            - api는 <이미지 분류>, <방향 추정 알고리즘> 동시 진행.
+3. **벤치마크**
+    1. Local-only       : 자체 분류 모델 + 자체 방향 추정 모델, 순차 처리
+    2. LLM Zero-shot    : 클래스 방향 흰트 없이 추론
+    3. LLM Few-shot     : 정답 예시 3~5개 이미지 정답 JSON 프롬프트에 전달
+4. **분류에 의한 관측보고 작성**
     - OpenAI API를 활용하여 자동 보고서 작성.
     - 보고서 템플릿 예시:
     
@@ -32,8 +38,9 @@
     어디서 : <거리, 고도> # 거리, 고도 class별 고정변수로
     누  가 : (사용자)
     ```
+    - 방향 : 8방위(N/NE/E/SE/S/SW/W/NW)
     
-4. **전파**
+5. **전파**
     - 보고된 메시지를 실시간으로 전파.
     - 고려 중인 방식:
         - 이메일 전송 (SMTP)
@@ -42,7 +49,7 @@
 
 ## 🧩 사용 기술
 
-- Python (PyTorch, Flask)
+- Python (PyTorch)
 - OpenAI API
 - Computer Vision (EfficientNet, ResNet, YOLOv8 등)
 - Dataset 증강 (Blur, Flip, Rotation)
